@@ -1,0 +1,98 @@
+<?php
+
+namespace App\Http\Controllers\Api;
+
+use App\Http\Controllers\Controller;
+use App\Models\User;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Auth;
+use Tymon\JWTAuth\Facades\JWTAuth;
+use Tymon\JWTAuth\Exceptions\JWTException;
+
+class AuthController extends Controller
+{
+    
+    public function register(Request $request){
+        $request->validate([
+            'name' => 'required|string|max:255',
+            'email' => 'required|email|unique:users',
+            'password' => 'required|min:6|confirmed',
+        ]);
+
+        $user = User::create([
+            'name' => $request->name,
+            'email' =>  $request->email,
+            'password' => $request->password
+        ]);
+        try {
+            $token = JWTAuth::fromUser($user);
+        } catch (JWTException $e) {
+            return response()->json(['error' => 'Could not create token', 'e' => $e], 500);
+        }
+
+        return response()->json([
+            'token' => $token,
+            'user' => $user,
+        ], 201);
+    }
+
+    public function login(Request $request){
+        $credentials = $request->validate([
+            'email' => 'required|email',
+            'password' => 'required'
+        ]);
+
+        try {
+            if (!$token = JWTAuth::attempt($credentials)) {
+                return response()->json(['error' => 'Invalid credentials'], 401);
+            }
+        } catch (JWTException $e) {
+            return response()->json(['error' => 'Could not create token', 'e' => $e], 500);
+        }
+
+        return response()->json([
+            'token' => $token,
+            'expires_in' => auth('api')->factory()->getTTL() * 60,
+        ]);
+    }
+
+    public function logout(){
+        try{
+            JWTAuth::invalidate(JWTAuth::getToken());
+        }catch(JWTException $e){
+            return response()->json([
+                'error' => 'Ошибка при выходе из системы', 'e' => $e
+            ], 500);
+        }
+        return response()->json([
+            'message' => 'Успешный выход из аккаунта'
+        ]);
+    }
+
+    public function me(){
+        try{
+            $user = Auth::user();
+            if (!$user) {
+                return response()->json(['error' => 'User not found'], 404);
+            }
+            return response()->json($user);
+
+        }catch(JWTException $e){
+            return response()->json(['error' => 'Ошибка при загрузке профиля', 'e' => $e], 500);
+        }
+    }
+    
+    // public function updateUser(Request $request)
+    // {
+    //     try {
+    //         $user = Auth::user();
+    //         $user->update($request->only(['name', 'email']));
+    //         return response()->json($user);
+    //     } catch (JWTException $e) {
+    //         return response()->json(['error' => 'Failed to update user' , 'e' => $e], 500);
+    //     }
+    // }
+
+}
+
