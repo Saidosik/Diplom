@@ -15,15 +15,18 @@ return new class extends Migration
             $table->id();
             $table->string('name',255);
             $table->string('description')->nullable();
-            $table->enum('status',['off', 'visible', 'banned']);
-            $table->string('price')->nullable();
-            $table->string('author')->nullable();
+            $table->enum('status',['off', 'visible', 'banned', 'on_moderation']);
+            $table->integer('price')->nullable();
+            $table->foreignId('author_id')->references('id')->on('users')->constrained()->onDelete('cascade');
             //$table->string('source');
             //$table->string('image');
             //$table->string('prewiew');
             //$table->string('icon');
             $table->softDeletes();
             $table->timestamps();
+
+            // Индексы
+            $table->index('status');  // Для фильтрации видимых курсов
         });
     }
 

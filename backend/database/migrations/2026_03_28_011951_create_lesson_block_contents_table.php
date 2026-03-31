@@ -13,14 +13,19 @@ return new class extends Migration
     {
         Schema::create('lesson_block_contents', function (Blueprint $table) {
             $table->id();
-             $table->unsignedBigInteger('order');
+             $table->unsignedBigInteger('sort_order');
             $table->foreignId('lesson_block_id')->references('id')->on('lesson_blocks')->constrained()->onDelete('cascade');
             $table->enum('status',['off', 'visible']);
             $table->enum('type',['text', 'heading', 'warning', 'important', 'clue', 'video', 'example', 'link', 'danger']);
             $table->jsonb('content');
             $table->softDeletes();
             $table->timestamps();
+
+            
+            $table->index(['lesson_block_id', 'sort_order']);
+            $table->index(['lesson_block_id', 'status']);  
         });
+
     }
 
     /**
@@ -31,3 +36,4 @@ return new class extends Migration
         Schema::dropIfExists('lesson_block_contents');
     }
 };
+

@@ -14,13 +14,20 @@ return new class extends Migration
         Schema::create('comments', function (Blueprint $table) {
             $table->id();
             $table->foreignId('user_id')->references('id')->on('users')->constrained()->onDelete('cascade');
-            $table->unsignedBigInteger('parent_id');
-            $table->enum('parent_type', ['course', 'lesson_block']);
-            $table->unsignedBigInteger('parent_messgae_id')->nullable();
-            $table->json('content');
+            $table->morphs('commentable');
+            $table->foreignId('parent_comment_id')
+                ->nullable()
+                ->constrained('comments')
+                ->nullOnDelete();
+
+            $table->jsonb('content');
             $table->enum('status', ['banned', 'visible']);
             $table->softDeletes();
             $table->timestamps();
+
+            // Индексы
+            $table->index(['commentable_id', 'user_id']);  // Для фильтрации
+            $table->index('parent_message_id');
         });
     }
 

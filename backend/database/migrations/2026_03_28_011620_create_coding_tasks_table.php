@@ -14,16 +14,21 @@ return new class extends Migration
         Schema::create('coding_tasks', function (Blueprint $table) {
             $table->id();
             $table->string('name', 255);
-            $table->unsignedBigInteger('order');
+            $table->unsignedBigInteger('sort_order');
             $table->foreignId('lesson_block_id')->references('id')->on('lesson_blocks')->constrained()->onDelete('cascade');
             $table->enum('status', ['off', 'visible']);
-            $table->json('standart_code');
-            $table->string('cpu_limits');
-            $table->unsignedInteger('time_limit');    // миллисекунды
-            $table->unsignedInteger('memory_limit');  // мегабайты
+            $table->jsonb('standart_code');
+            $table->string('cpu_limit');
+            $table->unsignedInteger('time_limit');
+            $table->unsignedInteger('ram_limit');
             $table->softDeletes();
             $table->timestamps();
+
+            $table->index(['lesson_block_id', 'sort_order']);
+            $table->index(['lesson_block_id','status']);
         });
+
+
     }
 
     /**
@@ -34,3 +39,4 @@ return new class extends Migration
         Schema::dropIfExists('coding_tasks');
     }
 };
+

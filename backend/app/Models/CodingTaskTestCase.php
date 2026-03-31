@@ -7,27 +7,27 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
-#[Fillable('user_id', 'status', 'lesson_block_id')]
+#[Fillable('coding_task_id', 'input', 'output', 'status', 'sort_order')]
 
-class Progress extends Model
+class CodingTaskTestCase extends Model
 {
     use SoftDeletes;
     protected function casts()
     {
-        return[
+        return [
+            'input' => 'array',
+            'output' => 'array',
+            'sort_order' => 'integer',
             'created_at' => 'datetime',
             'updated_at' => 'datetime',
             'deleted_at' => 'datetime',
         ];
     }
+    
 
-    public function user() : BelongsTo
+    public function codingTask() : BelongsTo
     {
-        return $this->belongsTo(User::class);
+        return $this->belongsTo(CodingTask::class);
     }
 
-    public function lessonBlock() : BelongsTo
-    {
-        return $this->belongsTo(LessonBlock::class);
-    }
 }

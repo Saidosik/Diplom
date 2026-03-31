@@ -14,9 +14,9 @@ return new class extends Migration
         Schema::create('questions', function (Blueprint $table) {
             $table->id();
             $table->foreignId('test_id')->references('id')->on('tests')->constrained()->onDelete('cascade');
-            $table->unsignedBigInteger('order');
+            $table->unsignedBigInteger('sort_order');
             $table->enum('type', ['single', 'multiple']);
-            $table->string('content');
+            $table->jsonb('content');
             $table->enum('status', ['off', 'visible']);
             // $table->string('icon');
             $table->softDeletes();
@@ -32,3 +32,4 @@ return new class extends Migration
         Schema::dropIfExists('questions');
     }
 };
+

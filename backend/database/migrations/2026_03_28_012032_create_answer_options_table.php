@@ -11,17 +11,13 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('solutions', function (Blueprint $table) {
+        Schema::create('answer_options', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('user_id')->references('id')->on('users')->constrained()->onDelete('cascade');
-            $table->foreignId('coding_task_id')->references('id')->on('coding_tasks')->constrained()->onDelete('cascade');
-            $table->enum('status',[ 'pending','checking', 'completed', 'checking_error']);
+            $table->foreignId('question_id')->references('id')->on('questions')->constrained()->onDelete('cascade');
+            $table->unsignedBigInteger('sort_order');
             $table->jsonb('content');
-            $table->enum('code_language', ['python', 'C#']);
             $table->softDeletes();
             $table->timestamps();
-
-
         });
     }
 
@@ -30,6 +26,7 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('solutions');
+        Schema::dropIfExists('answer_options');
     }
 };
+

@@ -6,16 +6,21 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Attributes\Fillable;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\HasOne;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
-#[Fillable('name', 'order', 'description', 'status', 'type', 'lesson_id')]
+#[Fillable('name', 'sort_order', 'description', 'status', 'type', 'lesson_id')]
 class LessonBlock extends Model
 {
+    use SoftDeletes;
     protected function casts()
     {
         return[
-            'order' => 'integer',
+            'type' => 'string',
+            'sort_order' => 'integer',
             'created_at'=>'datetime',
-            'updated_at'=>'datetime',
+            'updated_at' => 'datetime',
+            'deleted_at' => 'datetime',
         ];
     }
 
@@ -24,30 +29,46 @@ class LessonBlock extends Model
     }
 
     public function hasTest(){
-        
+        if ($this->hasMany(Test::class)->exists()){
+            return true;
+        }        return false;
     }
 
-    public function comment(): HasMany
+    public function hasCodingTasks(){
+        if($this->hasMany(CodingTask::class)->exists())
+        {
+            return true;
+        }        return false;
+    }
+
+    public function comments() 
     {
-        return $this->hasMany(Comment::class, 'parent_id')->where('parent_type', 'lesson_block');
+        return $this->morphMany(Comment::class, 'commentable');
     }
 
-    public function content(): HasMany
+    public function contents(): HasMany
     {
         return $this->hasMany(LessonBlockContent::class);
     }
 
-    public function test(): HasMany
+    public function tests(): HasMany
     {
         return $this->hasMany(Test::class);
     }
-    public function coding_task(): HasMany
+
+    public function codingTask(): HasOne
     {
-        return $this->hasMany(CodingTask::class);
+        return $this->hasOne(CodingTask::class);
     }
 
     public function lesson(): BelongsTo
     {
         return $this->belongsTo(Lesson::class);
     }
+
+    public function progress() :HasMany
+    {
+        return $this->hasMany(Progress::class);
+    }
 }
+

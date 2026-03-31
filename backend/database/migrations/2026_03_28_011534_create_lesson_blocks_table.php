@@ -14,7 +14,8 @@ return new class extends Migration
         Schema::create('lesson_blocks', function (Blueprint $table) {
             $table->id();
             $table->string('name',255);
-            $table->unsignedBigInteger('order');
+            $table->unsignedBigInteger('sort_order');
+            $table->string('description')->nullable();
             $table->foreignId('lesson_id')->references('id')->on('lessons')->constrained()->onDelete('cascade');
             $table->enum('status',['off', 'visible']);
             $table->enum('type',['theory', 'test', 'coding_task']);
@@ -22,6 +23,10 @@ return new class extends Migration
             //$table->string('icon');
             $table->softDeletes();
             $table->timestamps();
+
+            $table->index(['lesson_id', 'status']);
+            $table->index(['type', 'status']); 
+            $table->index(['lesson_id', 'sort_order']);  
         });
     }
 
@@ -33,3 +38,4 @@ return new class extends Migration
         Schema::dropIfExists('lesson_blocks');
     }
 };
+

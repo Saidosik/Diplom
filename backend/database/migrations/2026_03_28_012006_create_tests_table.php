@@ -16,7 +16,7 @@ return new class extends Migration
             $table->foreignId('lesson_block_id')->references('id')->on('lesson_blocks')->constrained()->onDelete('cascade');
             $table->string('name', 255);
             $table->string('description')->nullable();
-            $table->unsignedBigInteger('order');
+            $table->unsignedBigInteger('sort_order');
             $table->enum('status', ['off', 'visible']);
             // $table->string('icon');
             $table->softDeletes();
@@ -32,3 +32,4 @@ return new class extends Migration
         Schema::dropIfExists('tests');
     }
 };
+

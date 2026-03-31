@@ -14,7 +14,7 @@ return new class extends Migration
         Schema::create('lessons', function (Blueprint $table) {
             $table->id();
             $table->string('name',255);
-            $table->unsignedBigInteger('order');
+            $table->unsignedBigInteger('sort_order');
             $table->string('description')->nullable();
             $table->foreignId('module_id')->references('id')->on('modules')->constrained()->onDelete('cascade');
             $table->enum('status',['off', 'visible']);
@@ -22,6 +22,9 @@ return new class extends Migration
             //$table->string('icon');
             $table->softDeletes();
             $table->timestamps();
+
+            $table->index(['module_id', 'status']);  
+            $table->index(['module_id','sort_order']);  
         });
     }
 
@@ -33,3 +36,4 @@ return new class extends Migration
         Schema::dropIfExists('lessons');
     }
 };
+

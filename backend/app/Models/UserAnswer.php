@@ -2,32 +2,33 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Attributes\Fillable;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Attributes\Fillable;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
-#[Fillable('user_id', 'status', 'lesson_block_id')]
+#[Fillable('content', 'question_id' )]
 
-class Progress extends Model
+class UserAnswer extends Model
 {
     use SoftDeletes;
     protected function casts()
     {
-        return[
+        return [
+            'content' => 'array',
             'created_at' => 'datetime',
             'updated_at' => 'datetime',
             'deleted_at' => 'datetime',
         ];
     }
 
-    public function user() : BelongsTo
+    public function testAttempt(): BelongsTo
     {
-        return $this->belongsTo(User::class);
+        return $this->belongsTo(TestAttempt::class);
     }
 
-    public function lessonBlock() : BelongsTo
+    public function question(): BelongsTo
     {
-        return $this->belongsTo(LessonBlock::class);
+        return $this->belongsTo(Question::class);
     }
 }

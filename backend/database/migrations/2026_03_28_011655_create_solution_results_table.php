@@ -15,7 +15,7 @@ return new class extends Migration
             $table->id();
             $table->foreignId('solution_id')->references('id')->on('solutions')->constrained()->onDelete('cascade');
             $table->foreignId('coding_task_test_case_id')->references('id')->on('coding_task_test_cases')->constrained()->onDelete('cascade')->nullable();
-            $table->enum('status',[ 'passed', 'failed', 'runtime_error', 'compilation_error', 'time_limit_exceeded', 'memory_limit_exceeded']);
+            $table->enum('status',[ 'passed', 'failed', 'runtime_error', 'compilation_error', 'time_limit_error', 'memory_limit_error']);
             $table->enum('type', ['test_case', 'user_input']);
             $table->jsonb('output');
             $table->jsonb('input')->nullable();

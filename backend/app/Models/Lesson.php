@@ -6,20 +6,23 @@ use Illuminate\Database\Eloquent\Attributes\Fillable;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
-#[Fillable('name', 'order', 'description', 'status', 'module_id')]
+#[Fillable('name', 'sort_order', 'description', 'status', 'module_id')]
 class Lesson extends Model
 {
+    use SoftDeletes;
     protected function casts()
     {
         return[
-            'order' => 'integer',
+            'sort_order' => 'integer',
             'created_at'=>'datetime',
-            'updated_at'=>'datetime',
+            'updated_at' => 'datetime',
+            'deleted_at' => 'datetime',
         ];
     }
 
-    public function lesson_block(): HasMany
+    public function lessonBlocks(): HasMany
     {
         return $this->hasMany(LessonBlock::class);
     }
@@ -29,3 +32,4 @@ class Lesson extends Model
         return $this->belongsTo(Module::class);
     }
 }
+

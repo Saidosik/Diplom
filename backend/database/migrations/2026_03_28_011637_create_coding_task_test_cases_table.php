@@ -15,7 +15,7 @@ return new class extends Migration
             $table->id();
             $table->foreignId('coding_task_id')->references('id')->on('coding_tasks')->constrained()->onDelete('cascade');
             $table->enum('status',['hidden', 'visible', 'off']);
-            $table->unsignedBigInteger('order');
+            $table->unsignedBigInteger('sort_order');
             $table->jsonb('output');
             $table->jsonb('input');
             $table->softDeletes();
@@ -31,3 +31,4 @@ return new class extends Migration
         Schema::dropIfExists('coding_task_test_cases');
     }
 };
+

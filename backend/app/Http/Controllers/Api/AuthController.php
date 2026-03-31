@@ -28,7 +28,7 @@ class AuthController extends Controller
         try {
             $token = JWTAuth::fromUser($user);
         } catch (JWTException $e) {
-            return response()->json(['error' => 'Could not create token', 'e' => $e], 500);
+            return response()->json(['error' => 'Could not create token'], 500);
         }
 
         return response()->json([
@@ -53,7 +53,7 @@ class AuthController extends Controller
 
         return response()->json([
             'token' => $token,
-            'expires_in' => auth('api')->factory()->getTTL() * 60,
+            'expires_in' => JWTAuth::factory()->getTTL() * 60,
         ]);
     }
 
@@ -62,7 +62,7 @@ class AuthController extends Controller
             JWTAuth::invalidate(JWTAuth::getToken());
         }catch(JWTException $e){
             return response()->json([
-                'error' => 'Ошибка при выходе из системы', 'e' => $e
+                'error' => 'Ошибка при выходе из системы'
             ], 500);
         }
         return response()->json([
@@ -70,16 +70,15 @@ class AuthController extends Controller
         ]);
     }
 
-    public function me(){
-        try{
-            $user = Auth::user();
-            if (!$user) {
-                return response()->json(['error' => 'User not found'], 404);
-            }
-            return response()->json($user);
-
-        }catch(JWTException $e){
-            return response()->json(['error' => 'Ошибка при загрузке профиля', 'e' => $e], 500);
+    public function refresh(){
+        try {
+            $token = JWTAuth::refresh(JWTAuth::getToken());
+            return response()->json([
+                'token' => $token,
+                'expires_in' => JWTAuth::factory()->getTTL() * 60,
+            ]);
+        } catch (JWTException $e) {
+            return response()->json(['error' => 'Could not refresh token'], 500);
         }
     }
     
