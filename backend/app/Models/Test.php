@@ -32,5 +32,10 @@ class Test extends Model
         return $this->hasMany(Question::class);
     }
 
+    public function testAttempts(): HasMany
+    {
+        return $this->hasMany(TestAttempt::class);
+    }
+
 }
 
