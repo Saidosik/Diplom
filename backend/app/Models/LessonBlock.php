@@ -9,7 +9,7 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
-#[Fillable('name', 'sort_order', 'description', 'status', 'type', 'lesson_id')]
+#[Fillable(['name', 'sort_order', 'description', 'status', 'type', 'lesson_id'])]
 class LessonBlock extends Model
 {
     use SoftDeletes;

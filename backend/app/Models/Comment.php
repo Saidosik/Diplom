@@ -8,7 +8,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
-#[Fillable('user_id', 'commentable_id', 'commentable_type', 'parent_comment_id', 'content', 'status')]
+#[Fillable(['user_id', 'commentable_id', 'commentable_type', 'parent_comment_id', 'content', 'status'])]
 
 class Comment extends Model
 {

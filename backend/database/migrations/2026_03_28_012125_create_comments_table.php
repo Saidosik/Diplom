@@ -27,7 +27,7 @@ return new class extends Migration
 
             // Индексы
             $table->index(['commentable_id', 'user_id']);  // Для фильтрации
-            $table->index('parent_message_id');
+            $table->index('parent_comment_id');
         });
     }
 

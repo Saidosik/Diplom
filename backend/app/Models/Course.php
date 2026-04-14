@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
-#[Fillable(['name', 'description', 'status', 'price', 'author_id' ])]
+#[Fillable(['name', 'description', 'status', 'price', 'author_id', 'slug' ])]
 class Course extends Model
 {
     use SoftDeletes;
@@ -29,6 +29,11 @@ class Course extends Model
     public function comments()
     {
         return $this->morphMany(Comment::class, 'commentable');
+    }
+
+    public function isPublished() : bool
+    {
+        return $this->status === 'published';
     }
 }
 

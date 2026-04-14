@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
-#[Fillable('user_id', 'status', 'lesson_block_id')]
+#[Fillable(['user_id', 'status', 'lesson_block_id'])]
 
 class Progress extends Model
 {

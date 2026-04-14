@@ -8,7 +8,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
-#[Fillable('name', 'sort_order', 'description', 'course_id', 'status')]
+#[Fillable(['name', 'sort_order', 'description', 'course_id', 'status'])]
 class Module extends Model
 {
     use SoftDeletes;

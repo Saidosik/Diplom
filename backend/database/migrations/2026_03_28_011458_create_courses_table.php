@@ -14,8 +14,9 @@ return new class extends Migration
         Schema::create('courses', function (Blueprint $table) {
             $table->id();
             $table->string('name',255);
+            $table->string('slug')->unique();
             $table->string('description')->nullable();
-            $table->enum('status',['off', 'visible', 'banned', 'on_moderation']);
+            $table->enum('status',['off', 'published', 'banned','draft', 'on_moderation']);
             $table->integer('price')->nullable();
             $table->foreignId('author_id')->references('id')->on('users')->constrained()->onDelete('cascade');
             //$table->string('source');

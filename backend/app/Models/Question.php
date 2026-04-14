@@ -9,7 +9,7 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
-#[Fillable('content', 'sort_order', 'type', 'status', 'test_id')]
+#[Fillable(['content', 'sort_order', 'type', 'status', 'test_id'])]
 class Question extends Model
 {
     use SoftDeletes;

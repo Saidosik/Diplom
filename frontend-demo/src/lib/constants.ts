@@ -1,0 +1,103 @@
+import type { LessonItem } from "@/lib/types";
+
+export const APP_NAME = "Diploma Frontend Starter";
+export const DEMO_TOKEN = "demo-access-token";
+
+export const NAV_ITEMS = [
+  { href: "/", label: "Главная" },
+  { href: "/demo/forms", label: "Формы" },
+  { href: "/demo/requests", label: "Запросы" },
+  { href: "/demo/animations", label: "Анимации" },
+  { href: "/lessons", label: "Уроки" },
+];
+
+export const LESSONS: LessonItem[] = [
+  {
+    id: 1,
+    slug: "next-app-router-basics",
+    title: "Next.js App Router: базовая архитектура",
+    excerpt: "Разбираем layout, page, loading, error и route groups.",
+    level: "easy",
+    track: "frontend",
+    durationMinutes: 35,
+    progressPercent: 70,
+    tags: ["next.js", "app-router", "layout"],
+  },
+  {
+    id: 2,
+    slug: "axios-api-layer",
+    title: "Axios API layer и хорошие практики",
+    excerpt: "Как не размазывать HTTP-запросы по компонентам.",
+    level: "medium",
+    track: "frontend",
+    durationMinutes: 45,
+    progressPercent: 40,
+    tags: ["axios", "api", "typescript"],
+  },
+  {
+    id: 3,
+    slug: "motion-ux-patterns",
+    title: "Framer Motion для сложных UX-сценариев",
+    excerpt: "Модалки, stagger, layout animations и presence.",
+    level: "medium",
+    track: "frontend",
+    durationMinutes: 50,
+    progressPercent: 10,
+    tags: ["framer-motion", "ux", "animation"],
+  },
+  {
+    id: 4,
+    slug: "forms-validation-zod",
+    title: "Формы, валидация и UX ошибок",
+    excerpt: "React Hook Form + Zod + понятные сообщения об ошибках.",
+    level: "medium",
+    track: "frontend",
+    durationMinutes: 55,
+    progressPercent: 25,
+    tags: ["forms", "zod", "react-hook-form"],
+  },
+  {
+    id: 5,
+    slug: "lms-dashboard-patterns",
+    title: "Паттерны интерфейса для LMS-платформы",
+    excerpt: "Карточки уроков, прогресс, фильтры и панель студента.",
+    level: "hard",
+    track: "frontend",
+    durationMinutes: 60,
+    progressPercent: 5,
+    tags: ["dashboard", "lms", "ui"],
+  },
+  {
+    id: 6,
+    slug: "ai-assistant-ui-flow",
+    title: "UI-поток для AI-помощника в дипломе",
+    excerpt: "Как подготовить интерфейс под mentor / hints / checker режимы.",
+    level: "hard",
+    track: "ai",
+    durationMinutes: 65,
+    progressPercent: 0,
+    tags: ["ai", "assistant", "lms"],
+  },
+  {
+    id: 7,
+    slug: "backend-contract-thinking",
+    title: "Как фронтенду думать API-контрактами",
+    excerpt: "Типы запросов, ответы, пагинация, ошибки и расширяемость.",
+    level: "hard",
+    track: "backend",
+    durationMinutes: 40,
+    progressPercent: 35,
+    tags: ["api", "contracts", "architecture"],
+  },
+  {
+    id: 8,
+    slug: "abort-controller-and-race-conditions",
+    title: "Отмена запросов и гонки состояний",
+    excerpt: "Почему быстрый ввод в поиск может ломать выдачу без AbortController.",
+    level: "hard",
+    track: "frontend",
+    durationMinutes: 30,
+    progressPercent: 15,
+    tags: ["abortcontroller", "axios", "async"],
+  }
+];

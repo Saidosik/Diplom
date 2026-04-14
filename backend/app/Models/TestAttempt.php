@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
-#[Fillable('test_id', 'user_id')]
+#[Fillable(['test_id', 'user_id'])]
 class TestAttempt extends Model
 {
     use SoftDeletes;

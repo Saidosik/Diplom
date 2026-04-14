@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
-#[Fillable(
+#[Fillable([
     'solution_id',
     'coding_task_test_case_id', 
     'status', 
@@ -16,7 +16,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
     'input',
     'error_message',
     'memory_usage', 
-    'execution_time',
+    'execution_time',]
     
 )]
 

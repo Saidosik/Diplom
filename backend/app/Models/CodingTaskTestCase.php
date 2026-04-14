@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
-#[Fillable('coding_task_id', 'input', 'output', 'status', 'sort_order')]
+#[Fillable(['coding_task_id', 'input', 'output', 'status', 'sort_order'])]
 
 class CodingTaskTestCase extends Model
 {

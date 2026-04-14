@@ -14,6 +14,7 @@ return new class extends Migration
         Schema::create('lesson_blocks', function (Blueprint $table) {
             $table->id();
             $table->string('name',255);
+            $table->string('slug')->unique();
             $table->unsignedBigInteger('sort_order');
             $table->string('description')->nullable();
             $table->foreignId('lesson_id')->references('id')->on('lessons')->constrained()->onDelete('cascade');

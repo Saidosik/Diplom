@@ -14,6 +14,7 @@ return new class extends Migration
         Schema::create('lessons', function (Blueprint $table) {
             $table->id();
             $table->string('name',255);
+            $table->string('slug')->unique();
             $table->unsignedBigInteger('sort_order');
             $table->string('description')->nullable();
             $table->foreignId('module_id')->references('id')->on('modules')->constrained()->onDelete('cascade');
