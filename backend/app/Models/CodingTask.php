@@ -33,4 +33,9 @@ class CodingTask extends Model
     {
         return $this->hasMany(CodingTaskTestCase::class);
     }
+
+    public function solutions(): HasMany
+    {
+        return $this->hasMany(Solution::class);
+    }
 }

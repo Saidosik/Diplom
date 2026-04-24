@@ -17,7 +17,7 @@ class CourseResource extends JsonResource
             'description' => $this->description,
             'status' => $this->status,
 
-            'author' => $this->whenLoaded('author_id', function () {
+            'author' => $this->whenLoaded('author', function () {
                 return [
                     'id' => $this->author->id,
                     'name' => $this->author->name,
@@ -25,6 +25,7 @@ class CourseResource extends JsonResource
             }),
 
             'modules_count' => $this->whenCounted('modules'),
+            'modules' => ModuleResource::collection($this->whenLoaded('modules')),
 
             'created_at' => $this->created_at,
             'updated_at' => $this->updated_at,

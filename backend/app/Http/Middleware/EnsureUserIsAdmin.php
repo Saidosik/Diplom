@@ -12,7 +12,13 @@ class EnsureUserIsAdmin
     {
         $user = $request->user();
 
-        if (! $user || ! $user->isAdmin()) {
+        if (! $user) {
+            return response()->json([
+                'message' => 'Не авторизован',
+            ], 401);
+        }
+
+        if (! $user->isAdmin()) {
             return response()->json([
                 'message' => 'Доступ запрещён',
             ], 403);

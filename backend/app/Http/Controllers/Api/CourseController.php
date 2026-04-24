@@ -1,34 +1,60 @@
 <?php
 
 namespace App\Http\Controllers\Api;
+
+use App\Enums\CourseStatus;
 use App\Http\Controllers\Controller;
+use App\Http\Requests\Course\IndexCourseRequest;
+use App\Http\Requests\StoreCourseRequest;
+use App\Http\Requests\UpdateCourseRequest;
 use App\Http\Resources\CourseResource;
 use App\Models\Course;
-use Illuminate\Http\Request;
 
 class CourseController extends Controller
 {
-    public function index(Request $request)
+    /**
+     * Display a listing of the resource.
+     */
+    public function index(IndexCourseRequest $request)
     {
-        $perPage = min((int) $request->integer('per_page', 12), 50);
+        $search = $request->string('search')->toString();
 
         $courses = Course::query()
-            ->where('status', 'published')
-            ->with('author:id,name')
-            ->withCount('modules')
-            ->latest()
-            ->paginate($perPage);
+        ->published()
+        ->withCatalogData();
 
-        return CourseResource::collection($courses);
+        return response()->json(CourseResource::collection($courses));
     }
 
+    /**
+     * Store a newly created resource in storage.
+     */
+    // public function store(StoreCourseRequest $request)
+    // {
+    //     //
+    // }2
+
+    /**
+     * Display the specified resource.
+     */
     public function show(Course $course)
     {
-        $this->authorize('view', $course);
+        //
+    }
 
-        $course->load('author:id,name');
-        $course->loadCount('modules');
+    /**
+     * Update the specified resource in storage.
+     */
+    // public function update(UpdateCourseRequest $request, Course $course)
+    // {
+    //     //
+    // }
 
-        return new CourseResource($course);
+    /**
+     * Remove the specified resource from storage.
+     */
+    public function destroy(Course $course)
+    {
+        //
     }
 }

@@ -8,28 +8,27 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
-#[Fillable(['name', 'sort_order', 'description', 'course_id', 'status'])]
+#[Fillable(['name', 'slug','sort_order', 'description', 'course_id', 'status'])]
 class Module extends Model
 {
     use SoftDeletes;
     protected function casts()
     {
-        return[
+        return [
             'sort_order' => 'integer',
-            'created_at'=>'datetime',
-            'updated_at'=>'datetime',
+            'created_at' => 'datetime',
+            'updated_at' => 'datetime',
             'deleted_at' => 'datetime',
         ];
     }
 
-    public function course() : BelongsTo
+    public function course(): BelongsTo
     {
         return $this->belongsTo(Course::class);
     }
 
-    public function lessons() : HasMany
+    public function lessons(): HasMany
     {
-        return $this->hasMany(Lesson::class);
+        return $this->hasMany(Lesson::class)->orderBy('sort_order');
     }
 }
-

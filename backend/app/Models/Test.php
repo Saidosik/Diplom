@@ -22,7 +22,7 @@ class Test extends Model
         ];
     }
 
-    public function lesson_block(): BelongsTo
+    public function lessonBlock(): BelongsTo
     {
         return $this->belongsTo(LessonBlock::class);
     }

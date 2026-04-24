@@ -7,9 +7,10 @@ use Illuminate\Database\Eloquent\Attributes\Fillable;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
+use Illuminate\Database\Eloquent\Relations\MorphMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
-#[Fillable(['name', 'sort_order', 'description', 'status', 'type', 'lesson_id'])]
+#[Fillable(['name','slug', 'sort_order', 'description', 'status', 'type', 'lesson_id'])]
 class LessonBlock extends Model
 {
     use SoftDeletes;
@@ -29,7 +30,7 @@ class LessonBlock extends Model
     }
 
     public function hasTest(){
-        if ($this->hasMany(Test::class)->exists()){
+        if ($this->hasOne(Test::class)->exists()){
             return true;
         }        return false;
     }
@@ -41,19 +42,14 @@ class LessonBlock extends Model
         }        return false;
     }
 
-    public function comments() 
-    {
-        return $this->morphMany(Comment::class, 'commentable');
-    }
-
     public function contents(): HasMany
     {
-        return $this->hasMany(LessonBlockContent::class);
+        return $this->hasMany(LessonBlockContent::class)->orderBy('sort_order');
     }
 
-    public function tests(): HasMany
+    public function test(): HasOne
     {
-        return $this->hasMany(Test::class);
+        return $this->hasOne(Test::class);
     }
 
     public function codingTask(): HasOne
@@ -61,14 +57,14 @@ class LessonBlock extends Model
         return $this->hasOne(CodingTask::class);
     }
 
-    public function lesson(): BelongsTo
-    {
-        return $this->belongsTo(Lesson::class);
-    }
-
-    public function progress() :HasMany
+    public function progress(): HasMany
     {
         return $this->hasMany(Progress::class);
+    }
+
+    public function comments(): MorphMany
+    {
+        return $this->morphMany(Comment::class, 'commentable');
     }
 }
 

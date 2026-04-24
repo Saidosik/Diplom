@@ -1,36 +1,44 @@
 <?php
 
 use App\Http\Controllers\Api\AuthController;
-use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Api\CourseController;
-use App\Http\Controllers\Api\Admin\AdminCourseController;
-use App\Http\Controllers\Api\ManageCourseController;
+use App\Http\Controllers\Api\Lesson\ManageLessonBlockController;
+use App\Http\Controllers\Api\Lesson\ManageLessonController;
+use App\Http\Controllers\Api\SocialAuthController;
+use Illuminate\Support\Facades\Route;
 
-Route::post('/register', [AuthController::class, 'register']);
-Route::post('/login', [AuthController::class, 'login']);
+Route::middleware('guest')->group(function () {
+    Route::post('/register', [AuthController::class, 'register']);
+    Route::post('/login', [AuthController::class, 'login']);
+});
 
-// Публичные курсы
+Route::middleware('refresh')->group(function () {
+    Route::post('/refresh', [AuthController::class, 'refresh']);
+});
+
+Route::prefix('oauth')->group(function () {
+    Route::get('/{provider}/redirect-url', [SocialAuthController::class, 'redirectUrl']);
+    Route::get('/{provider}/callback', [SocialAuthController::class, 'callback']);
+});
+
 Route::apiResource('courses', CourseController::class)
     ->only(['index', 'show']);
 
-// Автор / админ
-Route::middleware('jwt.auth')->group(function () {
+Route::middleware('jwt')->group(function () {
     Route::get('/me', [AuthController::class, 'me']);
     Route::post('/logout', [AuthController::class, 'logout']);
-    Route::post('/refresh', [AuthController::class, 'refresh']);
 
-    Route::get('/my/courses', [ManageCourseController::class, 'myCourses']);
-    Route::post('/my/courses', [ManageCourseController::class, 'store']);
-    Route::patch('/my/courses/{course}', [ManageCourseController::class, 'update']);
-    Route::delete('/my/courses/{course}', [ManageCourseController::class, 'destroy']);
-    Route::post('/my/courses/{course}/publish', [ManageCourseController::class, 'publish']);
+    Route::post('/my/modules/{module}/lessons', [ManageLessonController::class, 'store']);
+    Route::patch('/my/lessons/{lesson}', [ManageLessonController::class, 'update']);
+    Route::delete('/my/lessons/{lesson}', [ManageLessonController::class, 'destroy']);
+
+    Route::post('/my/lessons/{lesson}/blocks', [ManageLessonBlockController::class, 'store']);
+    Route::patch('/my/lesson-blocks/{lessonBlock}', [ManageLessonBlockController::class, 'update']);
+    Route::delete('/my/lesson-blocks/{lessonBlock}', [ManageLessonBlockController::class, 'destroy']);
 });
 
-// Админ
 Route::prefix('admin')
-    ->middleware(['jwt.auth', 'admin'])
+    ->middleware(['jwt', 'admin'])
     ->group(function () {
-        Route::get('/courses', [AdminCourseController::class, 'index']);
-        Route::get('/courses/{course}', [AdminCourseController::class, 'show']);
-        Route::patch('/courses/{course}/status', [AdminCourseController::class, 'updateStatus']);
+        //
     });

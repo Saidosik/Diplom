@@ -34,7 +34,7 @@ class Question extends Model
         return $this->hasOne(Answer::class);
     }
 
-    public function answer_options(): HasMany
+    public function answerOptions(): HasMany
     {
         return $this->hasMany(AnswerOption::class);
     }

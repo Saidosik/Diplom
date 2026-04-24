@@ -41,7 +41,7 @@ class SolutionResult extends Model
         return $this->belongsTo(Solution::class);
     }
 
-    public function coding_task_test_case() : BelongsTo
+    public function codingTaskTestCase() : BelongsTo
     {
         return $this->belongsTo(CodingTaskTestCase::class);
     }

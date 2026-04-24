@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
+use App\Http\Resources\UserResource;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
@@ -12,8 +13,9 @@ use Tymon\JWTAuth\Exceptions\JWTException;
 
 class AuthController extends Controller
 {
-    
-    public function register(Request $request){
+
+    public function register(Request $request)
+    {
         $request->validate([
             'name' => 'required|string|max:255',
             'email' => 'required|email|unique:users',
@@ -25,30 +27,44 @@ class AuthController extends Controller
             'email' =>  $request->email,
             'password' => $request->password
         ]);
-        try {
+         try {
             $token = JWTAuth::fromUser($user);
         } catch (JWTException $e) {
-            return response()->json(['error' => 'Could not create token'], 500);
+            report($e);
+
+            return response()->json([
+                'error' => 'Не удалось создать токен',
+            ], 500);
         }
 
         return response()->json([
             'token' => $token,
-            'user' => $user,
+            'expires_in' => JWTAuth::factory()->getTTL() * 60,
+            'user' => new UserResource($user),
         ], 201);
     }
 
-    public function login(Request $request){
+    public function login(Request $request)
+    {
         $credentials = $request->validate([
-            'email' => 'required|email',
-            'password' => 'required'
+            'email' => ['required', 'email'],
+            'password' => ['required', 'string'],
         ]);
 
         try {
-            if (!$token = JWTAuth::attempt($credentials)) {
-                return response()->json(['error' => 'Invalid credentials'], 401);
+            if (! $token = JWTAuth::attempt($credentials)) {
+                return response()->json([
+                    'error' => 'Неверный email или пароль',
+                ], 401);
             }
         } catch (JWTException $e) {
-            return response()->json(['error' => 'Could not create token', 'e' => $e], 500);
+            report($e);
+
+            return response()->json([
+                'error' => 'Не удалось создать токен',
+                 'message' => $e->getMessage(),
+        'exception' => get_class($e),
+            ], 500);
         }
 
         return response()->json([
@@ -57,38 +73,46 @@ class AuthController extends Controller
         ]);
     }
 
-    public function logout(){
-        try{
+    public function logout()
+    {
+        try {
             JWTAuth::invalidate(JWTAuth::getToken());
-        }catch(JWTException $e){
+        } catch (JWTException $e) {
+            report($e);
+
             return response()->json([
-                'error' => 'Ошибка при выходе из системы'
+                'error' => 'Ошибка при выходе из системы',
             ], 500);
         }
+
         return response()->json([
-            'message' => 'Успешный выход из аккаунта'
+            'message' => 'Успешный выход из аккаунта',
         ]);
     }
 
-    public function me(Request $request){
-        return response()->json([
-            "request" => $request->all(),
-            "user"=> $request->user()
-        ]);
+    public function me(Request $request)
+    {
+         return new UserResource($request->user());
     }
 
-    public function refresh(){
+    public function refresh()
+    {
         try {
             $token = JWTAuth::refresh(JWTAuth::getToken());
+
             return response()->json([
                 'token' => $token,
                 'expires_in' => JWTAuth::factory()->getTTL() * 60,
             ]);
         } catch (JWTException $e) {
-            return response()->json(['error' => 'Could not refresh token'], 500);
+            report($e);
+
+            return response()->json([
+                'error' => 'Не удалось обновить токен',
+            ], 500);
         }
     }
-    
+
     // public function updateUser(Request $request)
     // {
     //     try {
@@ -101,4 +125,3 @@ class AuthController extends Controller
     // }
 
 }
-
