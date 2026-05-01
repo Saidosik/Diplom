@@ -19,15 +19,22 @@ return new class extends Migration
                 ->cascadeOnDelete();
 
             $table->string('provider');
+            $table->string('provider_user_id');
             $table->string('provider_id');
             $table->string('email')->nullable();
             $table->string('name')->nullable();
             $table->string('avatar')->nullable();
+            $table->text('access_token')->nullable();
+            $table->text('refresh_token')->nullable();
+            $table->timestamp('expires_at')->nullable();
 
             $table->timestamps();
 
+            $table->unique(['provider', 'provider_user_id']);
+            $table->unique(['user_id', 'provider']);
+
             $table->unique(['provider', 'provider_id']);
-            });
+        });
     }
 
     /**

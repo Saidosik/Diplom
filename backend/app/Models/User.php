@@ -3,35 +3,22 @@
 namespace App\Models;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
-
-use App\Enums\CourseStatus;
-use Attribute;
 use Database\Factories\UserFactory;
 use Illuminate\Database\Eloquent\Attributes\Fillable;
-use Tymon\JWTAuth\Contracts\JWTSubject;
 use Illuminate\Database\Eloquent\Attributes\Hidden;
-use Illuminate\Database\Eloquent\Attributes\Scope;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\HasMany;
-use Illuminate\Database\Eloquent\Relations\MorphMany;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
-use Illuminate\Database\Eloquent\SoftDeletes;
-use Illuminate\Database\Query\Builder;
+use PHPOpenSourceSaver\JWTAuth\Contracts\JWTSubject;
 
-#[Fillable(['name', 'email', 'password', 'role', 'avatar'])]
-#[Hidden(['password', 'remember_token', 'role'])]
-
+#[Fillable(['name', 'email', 'password', 'role', 'avatar', 'email_verified_at'])]
+#[Hidden(['password', 'remember_token'])]
 class User extends Authenticatable implements JWTSubject
 {
     /** @use HasFactory<UserFactory> */
-    use HasFactory, Notifiable, SoftDeletes;
+    use HasFactory, Notifiable;
 
-    /**
-     * Get the attributes that should be cast.
-     *
-     * @return array<string, string>
-     */
     protected function casts(): array
     {
         return [
@@ -43,13 +30,9 @@ class User extends Authenticatable implements JWTSubject
         ];
     }
 
-    public function isAdmin()
+    public function isAdmin(): bool
     {
-        if ($this->role === 'admin') {
-            return true;
-        } else {
-            return false;
-        }
+        return $this->role === 'admin';
     }
 
     public function getJWTIdentifier()
@@ -57,32 +40,17 @@ class User extends Authenticatable implements JWTSubject
         return $this->getKey();
     }
 
-    public function getJWTCustomClaims()
+    public function getJWTCustomClaims(): array
     {
         return [];
     }
 
-    public function solutions(): HasMany
+    public function publications(): HasMany
     {
-        return $this->hasMany(Solution::class);
+        return $this->hasMany(Publication::class, 'author_id');
     }
 
-    public function progress(): HasMany
-    {
-        return $this->hasMany(Progress::class);
-    }
-
-    public function comments(): HasMany
-    {
-        return $this->HasMany(Comment::class, 'user_id');
-    }
-
-    public function testAttempts(): HasMany
-    {
-        return $this->hasMany(TestAttempt::class);
-    }
-
-    public function socialAccounts(): HasMany
+    public function socialAccounts() : HasMany
     {
         return $this->hasMany(SocialAccount::class);
     }
