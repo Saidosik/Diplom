@@ -32,7 +32,7 @@ async function proxyLaravel(request: NextRequest, context: RouteContext) {
     const contentType = request.headers.get('content-type')?? undefined;
 
     try{
-        const body = readProxyBody(request)
+        const body = await readProxyBody(request)
 
         const response = await Laravel.request({
             url: endpoint,
@@ -46,6 +46,7 @@ async function proxyLaravel(request: NextRequest, context: RouteContext) {
         return NextResponse.json(response.data, {status: response.status})
     }catch(error){
         if(isAxiosError(error)){
+           
             return NextResponse.json(
                 error.response?.data ?? {message: 'Ошибка запроса к серверу'},
                 {status: error.response?.status ?? 500}

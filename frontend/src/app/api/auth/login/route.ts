@@ -2,7 +2,7 @@ import { loginSchema } from "@/features/auth/schemas";
 import { ACCESS_TOKEN_COOKIE } from "@/lib/auth/constants";
 import { buildAccessTokenCookieOptions } from "@/lib/auth/cookies";
 import createLaravelApi from "@/lib/http/laravel";
-import axios from "axios";
+import axios, { isAxiosError } from "axios";
 import { NextRequest, NextResponse } from "next/server";
 import z from "zod";
 
@@ -29,7 +29,7 @@ export async function POST(request: NextRequest) {
             email: body.email,
             password: body.password,
         })
-
+        console.log(response)
         const token = response.data?.access_token ?? response.data?.token;
         const expiresIn = response.data?.expires_in
 
@@ -49,14 +49,20 @@ export async function POST(request: NextRequest) {
         )
         return result
     } catch (error) {
+
         if (axios.isAxiosError(error)) {
+            const errorMessage = 
+                error.response?.data?.message ||
+                "Неверный логин или пароль"; // Укажите явный fallback
+
             return NextResponse.json(
-                { message: error.response?.data?.message ?? 'Не удалось выполнить вход' },
-                { status: error.response?.status ?? 500 }
-            )
+                { message: errorMessage },
+                { status: error.response?.status || 401 }
+            );
         }
 
         return NextResponse.json(
+
             { message: 'Внутренняя ошибка сервера' },
             { status: 500 },
         );

@@ -5,6 +5,7 @@ import { ACCESS_TOKEN_COOKIE } from '@/lib/auth/constants';
 import { buildAccessTokenCookieOptions } from '@/lib/auth/cookies';
 import { registerSchema } from '@/features/auth/schemas';
 import z from 'zod';
+import { redirect } from 'next/navigation';
 
 export async function POST(request: NextRequest) {
     const rawBody = await request.json().catch(() => null);
@@ -62,6 +63,7 @@ export async function POST(request: NextRequest) {
             token,
             buildAccessTokenCookieOptions(expiresIn),
         );
+
 
         return result;
     } catch (error) {

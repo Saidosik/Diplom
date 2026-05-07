@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Api\User;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\User\UserResource;
 use App\Models\User;
+use App\Notifications\VerifyEmailNotification;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use PHPOpenSourceSaver\JWTAuth\Facades\JWTAuth;
@@ -28,7 +29,7 @@ class AuthController extends Controller
             'password' => $request->password,
         ]);
 
-        $user->sendEmailVerificationNotification();
+        $user->notify(new VerifyEmailNotification());
 
         try {
             $token = JWTAuth::fromUser($user);
@@ -49,6 +50,7 @@ class AuthController extends Controller
 
     public function login(Request $request)
     {
+        sleep(2);
         $credentials = $request->validate([
             'email' => ['required', 'email'],
             'password' => ['required', 'string'],
@@ -105,7 +107,7 @@ class AuthController extends Controller
 
     public function refresh()
     {
-        $newToken = auth()->refresh();
+        $newToken = JWTAuth::parseToken()->refresh();
 
         return response()->json([
             'access_token' => $newToken,

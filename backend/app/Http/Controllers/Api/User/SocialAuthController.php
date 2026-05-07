@@ -1,14 +1,15 @@
 <?php
 
-namespace App\Http\Controllers\Api;
+namespace App\Http\Controllers\Api\User;
 
 use App\Http\Controllers\Controller;
-use App\Http\Resources\UserResource;
+use App\Http\Resources\User\UserResource;
 use App\Models\SocialAccount;
 use App\Models\User;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Str;
 use Laravel\Socialite\Facades\Socialite;
 use PHPOpenSourceSaver\JWTAuth\Facades\JWTAuth;
@@ -48,10 +49,10 @@ class SocialAuthController extends Controller
             ], 404);
         }
 
-        $socialUser = Socialite::driver($provider)
-            ->stateless()
-            ->user();
+        $driver = Socialite::driver($provider);
 
+        /** @var \Laravel\Socialite\Two\AbstractProvider $driver */
+        $socialUser = $driver->stateless()->user();
         $user = $this->findOrCreateUser($provider, $socialUser);
 
         $token = JWTAuth::fromUser($user);
@@ -65,7 +66,17 @@ class SocialAuthController extends Controller
 
     private function findOrCreateUser(string $provider, mixed $socialUser): User
     {
-        $providerId = (string) $socialUser->getId();
+        Log::info("Данные от провайдера [$provider]:", [
+            'id'     => $socialUser->getId(),
+            'email'  => $socialUser->getEmail(),
+            'name'   => $socialUser->getName(),
+            'token'  => $socialUser->token,
+        ]);
+        Log::info("id [$provider]:", [
+            'id'     => $socialUser->getId(),
+        ]);
+        $providerId =  $socialUser->getId();
+
 
         $socialAccount = SocialAccount::query()
             ->where('provider', $provider)

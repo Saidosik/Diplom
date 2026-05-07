@@ -1,5 +1,5 @@
-export type UserRole = 'user' | 'admin' | string;
-
+// export type UserRole = 'user' | 'admin' | string;
+export type AuthSlug = 'login' | 'register'
 export type SocialAccount = {
   id: number;
   provider: string;
@@ -13,9 +13,9 @@ export type User = {
   id: number;
   name: string;
   email: string;
+  role?: "user" | "admin" | "moderator" | string;
   avatar?: string | null;
   avatar_url?: string | null;
-  role?: UserRole;
   email_verified_at?: string | null;
   is_email_verified?: boolean;
   registered_via?: string | string[];
@@ -50,3 +50,8 @@ export type RegisterDto = {
 export type AuthMeResponse = {
   user: User;
 };
+
+
+export type AllowedAuthProviders = 'yandex' | 'google' 
+
+export type AuthProviders = AllowedAuthProviders[] 

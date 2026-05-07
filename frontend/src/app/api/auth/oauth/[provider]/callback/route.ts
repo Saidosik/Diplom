@@ -3,7 +3,7 @@ import { NextRequest, NextResponse } from 'next/server';
 
 import { ACCESS_TOKEN_COOKIE, getOAuthStateCookieName } from '@/lib/auth/constants';
 import { buildAccessTokenCookieOptions } from '@/lib/auth/cookies';
-import  createLaravelApi from '@/lib/http/laravel';
+import createLaravelApi from '@/lib/http/laravel';
 
 const allowedProviders = ['google', 'yandex'];
 
@@ -55,8 +55,9 @@ export async function GET(request: NextRequest, { params }: Params) {
 
       return result;
     }
-
-    const result = NextResponse.redirect(new URL('/me', request.url));
+    const result = NextResponse.redirect(
+      new URL(`/profile?oauth=success&provider=${provider}`, request.url)
+    )
 
     result.cookies.set(
       ACCESS_TOKEN_COOKIE,
@@ -74,7 +75,10 @@ export async function GET(request: NextRequest, { params }: Params) {
     }
 
     const result = NextResponse.redirect(
-      new URL('/auth?error=oauth_failed', request.url),
+      new URL(
+        `/auth?mode=login&oauth=error&provider=${provider}&message=Не удалось войти через сервис`,
+        request.url
+      )
     );
 
     result.cookies.delete(stateCookieName);

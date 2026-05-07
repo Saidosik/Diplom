@@ -2,8 +2,11 @@
 
 namespace App\Models;
 
-// use Illuminate\Contracts\Auth\MustVerifyEmail;
+use App\Notifications\ResetPasswordNotification;
+use App\Notifications\VerifyEmailNotification;
 use Database\Factories\UserFactory;
+use Illuminate\Auth\MustVerifyEmail;
+use Illuminate\Contracts\Auth\MustVerifyEmail as MustVerifyEmailContract;
 use Illuminate\Database\Eloquent\Attributes\Fillable;
 use Illuminate\Database\Eloquent\Attributes\Hidden;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -14,10 +17,10 @@ use PHPOpenSourceSaver\JWTAuth\Contracts\JWTSubject;
 
 #[Fillable(['name', 'email', 'password', 'role', 'avatar', 'email_verified_at'])]
 #[Hidden(['password', 'remember_token'])]
-class User extends Authenticatable implements JWTSubject
+class User extends Authenticatable implements JWTSubject, MustVerifyEmailContract
 {
     /** @use HasFactory<UserFactory> */
-    use HasFactory, Notifiable;
+    use HasFactory, Notifiable, MustVerifyEmail;
 
     protected function casts(): array
     {
@@ -29,6 +32,17 @@ class User extends Authenticatable implements JWTSubject
             'deleted_at' => 'datetime',
         ];
     }
+
+    public function sendEmailVerificationNotification()
+    {
+        $this->notify(new VerifyEmailNotification);
+    }
+
+    public function sendPasswordResetNotification($token)
+    {
+        $this->notify(new ResetPasswordNotification($token));
+    }
+
 
     public function isAdmin(): bool
     {
@@ -50,8 +64,11 @@ class User extends Authenticatable implements JWTSubject
         return $this->hasMany(Publication::class, 'author_id');
     }
 
-    public function socialAccounts() : HasMany
+    public function socialAccounts(): HasMany
     {
-        return $this->hasMany(SocialAccount::class);
+        return $this->hasMany(SocialAccount::class, 'user_id');
     }
 }
+
+
+//http://localhost:3000/verify-email?id=11&expires=1777928934&signature=14

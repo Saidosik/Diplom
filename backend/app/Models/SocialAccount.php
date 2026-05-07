@@ -10,7 +10,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 #[Fillable(
     'user_id',
     'provider',
-    'provider_user_id',
+    'provider_id',
     'email',
     'name',
     'avatar',

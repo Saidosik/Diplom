@@ -19,7 +19,6 @@ return new class extends Migration
                 ->cascadeOnDelete();
 
             $table->string('provider');
-            $table->string('provider_user_id');
             $table->string('provider_id');
             $table->string('email')->nullable();
             $table->string('name')->nullable();
@@ -29,8 +28,6 @@ return new class extends Migration
             $table->timestamp('expires_at')->nullable();
 
             $table->timestamps();
-
-            $table->unique(['provider', 'provider_user_id']);
             $table->unique(['user_id', 'provider']);
 
             $table->unique(['provider', 'provider_id']);

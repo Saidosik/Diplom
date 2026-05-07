@@ -2,7 +2,6 @@ import axios from 'axios';
 import { NextResponse } from 'next/server';
 import createLaravelApi from '@/lib/http/laravel';
 import { getAccessTokenCookie } from '@/lib/auth/cookies';
-import { ACCESS_TOKEN_COOKIE } from '@/lib/auth/constants';
 
 export async function GET() {
   const token = await getAccessTokenCookie();
@@ -17,7 +16,7 @@ export async function GET() {
   try {
     const laravel = createLaravelApi(token);
     const response = await laravel.get('/me');
-
+    console.log("response")
     return NextResponse.json({
       user: response.data?.data ?? response.data?.user ?? response.data,
     });
@@ -27,7 +26,7 @@ export async function GET() {
       { status: 401 },
     );
 
-    result.cookies.delete(ACCESS_TOKEN_COOKIE);
+    // result.cookies.delete(ACCESS_TOKEN_COOKIE);
 
     if (axios.isAxiosError(error)) {
       console.log('[api/auth/me] status:', error.response?.status);

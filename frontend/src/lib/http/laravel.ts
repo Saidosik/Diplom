@@ -1,4 +1,5 @@
 import axios from "axios"
+import { ApiError } from "./api-errors";
 
 export default function createLaravelApi(accessToken?: string | null){
     const baseURL = process.env.NEXT_PUBLIC_LARAVEL_API_URL
@@ -13,4 +14,8 @@ export default function createLaravelApi(accessToken?: string | null){
             ...(accessToken? {Authorization: `Bearer ${accessToken}`} : {})
         }
     })
+
+    
 }
+
+

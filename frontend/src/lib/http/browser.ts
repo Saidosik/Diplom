@@ -1,4 +1,5 @@
 import axios from "axios";
+import { ApiError } from "./api-errors";
 
 const isServer = typeof window === 'undefined';
 
@@ -12,3 +13,16 @@ export const browserApi = axios.create({
         Accept: "application/json"
     }
 });
+
+
+browserApi.interceptors.response.use(
+  (response) => response,
+  (error) => {
+    // Здесь мы конвертируем ошибку Axios в унифицированный формат
+    const status = error.response?.status || 500;
+    const message = error.response?.data?.message || 'Что-то пошло не так';
+    const code = error.response?.data?.code || 'INTERNAL_ERROR';
+
+    throw new ApiError(message, status, code);
+  }
+);

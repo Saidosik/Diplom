@@ -40,10 +40,12 @@ export async function deleteAvatar(): Promise<User | null> {
   return payload.user ?? payload.data ?? null;
 }
 
-export async function resendEmailVerification(): Promise<{ message: string }> {
-  const response = await browserApi.post('/laravel/email/verification-notification');
-  return response.data;
-}
+// export async function resendEmailVerification(): Promise<{ message: string }> {
+//   const response = await browserApi.post('/laravel/email/verification-notification');
+//   return response.data;
+// }
+
+
 
 export async function deleteAccount(): Promise<{ message: string }> {
   const response = await browserApi.delete('/laravel/me');
